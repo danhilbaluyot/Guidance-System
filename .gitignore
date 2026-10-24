@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# offline MySQL export (contains real student data)
+/exports/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
