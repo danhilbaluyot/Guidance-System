@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "export:mysql": "node --env-file=.env.local scripts/export-to-mysql.mjs"
+    "export:mysql": "node --env-file=.env.local scripts/export-to-mysql.mjs",
+    "seed:students": "node --env-file=.env.local scripts/seed-students.mjs",
+    "db:push": "node --env-file=.env.local scripts/run-sql.mjs"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",

@@ -1,4 +1,4 @@
-// One-off export: pulls all rows from Supabase (profiles, visits) and writes a
+// One-off export: pulls all rows from Supabase (profiles, visits, students) and writes a
 // MySQL-compatible .sql dump to exports/guidance_offline.sql for offline
 // browsing in phpMyAdmin under XAMPP. Does not touch the live app or its data.
 //
@@ -78,6 +78,14 @@ const PROFILES_COLUMNS = [
   { name: "created_at", type: "datetime" },
 ];
 
+const STUDENTS_COLUMNS = [
+  { name: "student_number", type: "string" },
+  { name: "student_name", type: "string" },
+  { name: "grade_level", type: "string" },
+  { name: "section", type: "string" },
+  { name: "created_at", type: "datetime" },
+];
+
 const VISITS_COLUMNS = [
   { name: "id", type: "string" },
   { name: "student_name", type: "string" },
@@ -102,6 +110,7 @@ CREATE DATABASE IF NOT EXISTS \`guidance_offline\` DEFAULT CHARACTER SET utf8mb4
 USE \`guidance_offline\`;
 
 DROP TABLE IF EXISTS \`visits\`;
+DROP TABLE IF EXISTS \`students\`;
 DROP TABLE IF EXISTS \`profiles\`;
 
 CREATE TABLE \`profiles\` (
@@ -109,6 +118,16 @@ CREATE TABLE \`profiles\` (
   \`full_name\` VARCHAR(255) NOT NULL,
   \`role\` VARCHAR(20) NOT NULL DEFAULT 'counselor',
   \`created_at\` DATETIME NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE \`students\` (
+  \`id\` INT AUTO_INCREMENT PRIMARY KEY,
+  \`student_number\` VARCHAR(30) NOT NULL UNIQUE,
+  \`student_name\` VARCHAR(120) NOT NULL,
+  \`grade_level\` VARCHAR(40) NOT NULL,
+  \`section\` VARCHAR(60) NOT NULL,
+  \`created_at\` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX \`idx_students_number\` (\`student_number\`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE \`visits\` (
@@ -134,11 +153,28 @@ CREATE TABLE \`visits\` (
 `.trim();
 
 async function main() {
-  console.log("Fetching profiles and visits from Supabase...");
-  const [profiles, visits] = await Promise.all([
-    fetchAll("profiles", "created_at"),
-    fetchAll("visits", "time_in"),
-  ]);
+  console.log("Fetching profiles, visits, and students from Supabase...");
+  let profiles = [];
+  let visits = [];
+  let students = [];
+
+  try {
+    profiles = await fetchAll("profiles", "created_at");
+  } catch (e) {
+    console.warn("Could not fetch profiles:", e.message);
+  }
+
+  try {
+    visits = await fetchAll("visits", "time_in");
+  } catch (e) {
+    console.warn("Could not fetch visits:", e.message);
+  }
+
+  try {
+    students = await fetchAll("students", "created_at");
+  } catch (e) {
+    console.warn("Could not fetch students (table may not exist yet in Supabase):", e.message);
+  }
 
   const lines = [
     "-- Offline export of the Guidance app's Supabase data.",
@@ -150,6 +186,9 @@ async function main() {
     `-- profiles (${profiles.length} rows)`,
     ...profiles.map((row) => insertStatement("profiles", PROFILES_COLUMNS, row)),
     "",
+    `-- students (${students.length} rows)`,
+    ...students.map((row) => insertStatement("students", STUDENTS_COLUMNS, row)),
+    "",
     `-- visits (${visits.length} rows)`,
     ...visits.map((row) => insertStatement("visits", VISITS_COLUMNS, row)),
     "",
@@ -160,7 +199,9 @@ async function main() {
   await mkdir(outDir, { recursive: true });
   await writeFile(outFile, lines.join("\n"), "utf8");
 
-  console.log(`Done. Wrote ${profiles.length} profiles and ${visits.length} visits to:`);
+  console.log(
+    `Done. Wrote ${profiles.length} profiles, ${students.length} students, and ${visits.length} visits to:`,
+  );
   console.log(outFile);
 }
 

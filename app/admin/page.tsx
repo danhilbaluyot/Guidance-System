@@ -11,7 +11,7 @@ export default async function Dashboard() {
   const countSince = (since: string) =>
     supabase.from("visits").select("*", { count: "exact", head: true }).gte("time_in", since);
 
-  const [today, week, month, waiting, inSession, noShow, todayWaits, queuePreview, monthRows] =
+  const [today, week, month, waiting, inSession, , todayWaits, queuePreview, monthRows] =
     await Promise.all([
       countSince(todayStart),
       countSince(startOfManilaWeek()),
