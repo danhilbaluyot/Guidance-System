@@ -30,11 +30,11 @@ export default function Modal({
       onClick={(e) => {
         if (e.target === ref.current) onClose();
       }}
-      className="m-auto max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-0 shadow-xl"
+      className="m-auto max-h-[90dvh] w-[calc(100vw-2rem)] max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-0 shadow-xl"
     >
       {/* Children mount only while open, so the form starts fresh every time. */}
       {open && (
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="mb-5 flex items-start justify-between gap-4">
             <h2 className="text-lg font-semibold text-text">{title}</h2>
             <button

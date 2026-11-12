@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { logout } from "@/app/login/actions";
 import NavLink from "@/components/NavLink";
+import MobileAdminMenu from "@/components/MobileAdminMenu";
 import guidanceLogo from "@/img/guidance_image.jpg";
 
 const DashboardIcon = () => (
@@ -64,73 +65,74 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     );
   }
 
+  const brand = (
+    <div className="flex min-w-0 items-center gap-3">
+      <Image
+        src={guidanceLogo}
+        alt="Guidance Office"
+        className="h-10 w-10 shrink-0 rounded-full object-cover"
+        width={40}
+        height={40}
+      />
+      <div className="min-w-0">
+        <span className="font-heading text-lg font-bold text-primary">Guidance</span>
+        <p className="text-xs text-text-muted">Office Visit Log</p>
+      </div>
+    </div>
+  );
+
+  const navigation = (
+    <nav aria-label="Admin navigation" className="flex flex-col gap-1">
+      <NavLink href="/admin" exact icon={<DashboardIcon />}>Dashboard</NavLink>
+      <NavLink href="/admin/queue" icon={<QueueIcon />}>Pila</NavLink>
+      <NavLink href="/admin/visits" icon={<VisitsIcon />}>Visits</NavLink>
+      <NavLink href="/admin/search" icon={<SearchIcon />}>Paghahanap</NavLink>
+      <NavLink href="/admin/download" icon={<DownloadIcon />}>Download</NavLink>
+    </nav>
+  );
+
+  const account = (
+    <>
+      <div className="flex items-center gap-2">
+        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+          {profile.full_name?.charAt(0)?.toUpperCase() ?? "?"}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-text">{profile.full_name}</p>
+          <span className={`text-xs font-medium ${profile.role === "admin" ? "text-accent" : "text-primary"}`}>
+            {profile.role === "admin" ? "Admin" : "Counselor"}
+          </span>
+        </div>
+      </div>
+      <form action={logout} className="mt-3">
+        <button className="w-full rounded-lg px-2 py-1.5 text-left text-sm text-text-muted transition-colors hover:bg-surface hover:text-error">
+          Logout
+        </button>
+      </form>
+    </>
+  );
+
   return (
-    <div className="flex flex-1">
+    <div className="flex min-w-0 flex-1 flex-col md:flex-row">
+      <MobileAdminMenu brand={brand} navigation={navigation} account={account} />
       {/* Sidebar */}
-      <aside className="flex w-60 shrink-0 flex-col border-r border-border bg-card print:hidden">
+      <aside className="hidden w-60 shrink-0 flex-col border-r border-border bg-card md:flex print:hidden">
         {/* Brand + Logo */}
         <div className="border-b border-border px-5 py-4">
-          <Link href="/admin" className="flex items-center gap-3">
-            <Image
-              src={guidanceLogo}
-              alt="Guidance Office"
-              className="h-10 w-10 rounded-full object-cover"
-              width={40}
-              height={40}
-            />
-            <div>
-              <span className="font-heading text-lg font-bold text-primary">Guidance</span>
-              <p className="text-xs text-text-muted">Office Visit Log</p>
-            </div>
-          </Link>
+          <Link href="/admin">{brand}</Link>
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
-          <NavLink href="/admin" exact icon={<DashboardIcon />}>
-            Dashboard
-          </NavLink>
-          <NavLink href="/admin/queue" icon={<QueueIcon />}>
-            Pila
-          </NavLink>
-          <NavLink href="/admin/visits" icon={<VisitsIcon />}>
-            Visits
-          </NavLink>
-          <NavLink href="/admin/search" icon={<SearchIcon />}>
-            Paghahanap
-          </NavLink>
-          <NavLink href="/admin/download" icon={<DownloadIcon />}>
-            Download
-          </NavLink>
-        </nav>
+        <div className="flex-1 px-3 py-4">{navigation}</div>
 
         {/* User info at bottom */}
         <div className="border-t border-border px-4 py-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
-              {profile.full_name?.charAt(0)?.toUpperCase() ?? "?"}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-text">{profile.full_name}</p>
-              <span
-                className={`text-xs font-medium ${
-                  profile.role === "admin" ? "text-accent" : "text-primary"
-                }`}
-              >
-                {profile.role === "admin" ? "Admin" : "Counselor"}
-              </span>
-            </div>
-          </div>
-          <form action={logout} className="mt-3">
-            <button className="w-full rounded-lg px-2 py-1.5 text-left text-sm text-text-muted transition-colors hover:bg-surface hover:text-error">
-              Logout
-            </button>
-          </form>
+          {account}
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto px-6 py-6">
+      <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 md:overflow-y-auto md:py-6">
         <div className="mx-auto max-w-6xl">{children}</div>
       </main>
     </div>

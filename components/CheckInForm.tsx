@@ -193,7 +193,7 @@ export default function CheckInForm() {
   // SUCCESS CONFIRMATION SCREEN
   if (state.ok) {
     return (
-      <div className="rounded-2xl bg-success-light p-8 text-center sm:p-12">
+      <div className="rounded-2xl bg-success-light p-4 text-center sm:p-12">
         <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-success/15 animate-scale-in">
           <svg
             className="h-10 w-10 text-success"
@@ -208,7 +208,7 @@ export default function CheckInForm() {
         <span className="inline-block rounded-full bg-success/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-success">
           Check-In Successful
         </span>
-        <h2 className="mt-3 text-3xl font-bold tracking-tight text-text">
+        <h2 className="mt-3 break-words text-2xl font-bold tracking-tight text-text sm:text-3xl">
           Salamat, {state.student_name}!
         </h2>
         <p className="mt-2 text-text-muted">
@@ -217,19 +217,19 @@ export default function CheckInForm() {
 
         {/* Visit Summary Card */}
         <div className="mx-auto mt-6 max-w-md divide-y divide-border rounded-xl border border-border bg-card p-4 text-left shadow-xs">
-          <div className="flex justify-between py-2 text-sm">
+          <div className="flex flex-wrap justify-between gap-1 py-2 text-sm">
             <span className="text-text-muted">Student Number:</span>
-            <span className="font-semibold text-text">{state.student_number}</span>
+            <span className="break-all font-semibold text-text">{state.student_number}</span>
           </div>
           {state.grade_level && (
-            <div className="flex justify-between py-2 text-sm">
+            <div className="flex flex-wrap justify-between gap-1 py-2 text-sm">
               <span className="text-text-muted">Year & Section:</span>
-              <span className="font-semibold text-text">
+              <span className="break-words font-semibold text-text">
                 {state.grade_level} · {state.section}
               </span>
             </div>
           )}
-          <div className="flex justify-between py-2 text-sm">
+          <div className="flex flex-wrap justify-between gap-1 py-2 text-sm">
             <span className="text-text-muted">Status sa Pila:</span>
             <span className="inline-flex items-center rounded-full bg-warning-light px-2.5 py-0.5 text-xs font-semibold text-warning">
               Waiting in Queue
@@ -264,7 +264,7 @@ export default function CheckInForm() {
             setStep("express");
             setBannerNotice(null);
           }}
-          className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all ${
+          className={`min-w-0 flex-1 rounded-lg px-2 py-2.5 text-xs font-semibold transition-all sm:text-sm ${
             step === "express"
               ? "bg-card text-primary shadow-xs"
               : "text-text-muted hover:text-text"
@@ -278,7 +278,7 @@ export default function CheckInForm() {
             setStep("manual");
             setBannerNotice(null);
           }}
-          className={`flex-1 rounded-lg py-2.5 text-sm font-semibold transition-all ${
+          className={`min-w-0 flex-1 rounded-lg px-2 py-2.5 text-xs font-semibold transition-all sm:text-sm ${
             step === "manual"
               ? "bg-card text-primary shadow-xs"
               : "text-text-muted hover:text-text"

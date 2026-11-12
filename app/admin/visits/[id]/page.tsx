@@ -52,9 +52,9 @@ export default async function VisitDetail({ params }: { params: Promise<{ id: st
 
       <dl className="divide-y divide-border rounded-2xl border border-border bg-card">
         {rows.map(([k, val, type]) => (
-          <div key={k} className="flex gap-4 px-5 py-3.5">
-            <dt className="w-40 shrink-0 text-sm text-text-muted">{k}</dt>
-            <dd className="whitespace-pre-wrap text-text">
+          <div key={k} className="flex flex-col gap-1 px-4 py-3.5 sm:flex-row sm:gap-4 sm:px-5">
+            <dt className="text-sm text-text-muted sm:w-40 sm:shrink-0">{k}</dt>
+            <dd className="min-w-0 break-words whitespace-pre-wrap text-text">
               {type === "badge" && val ? (
                 <span className={statusBadge(val as StatusValue)}>
                   {STATUS_LABELS[val as StatusValue] ?? val}

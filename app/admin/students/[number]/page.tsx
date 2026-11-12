@@ -24,8 +24,8 @@ export default async function StudentHistory({ params }: { params: Promise<{ num
         ← Bumalik sa visits
       </Link>
       <div>
-        <h1 className="text-2xl font-bold text-text">{latest?.student_name ?? "Student"}</h1>
-        <p className="mt-1 text-text-muted">
+        <h1 className="break-words text-2xl font-bold text-text">{latest?.student_name ?? "Student"}</h1>
+        <p className="mt-1 break-words text-text-muted">
           {studentNumber}
           {latest && ` · ${latest.grade_level} · ${latest.section}`} · {visits.length} visit
           {visits.length === 1 ? "" : "s"}
@@ -48,7 +48,7 @@ export default async function StudentHistory({ params }: { params: Promise<{ num
               </div>
             </div>
             {v.counselor_notes && (
-              <p className="mt-3 whitespace-pre-wrap rounded-xl bg-surface p-3 text-sm text-text-muted">
+              <p className="mt-3 break-words whitespace-pre-wrap rounded-xl bg-surface p-3 text-sm text-text-muted">
                 {v.counselor_notes}
               </p>
             )}

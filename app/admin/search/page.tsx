@@ -1,5 +1,6 @@
 import Link from "next/link";
 import EditVisitButton from "@/components/EditVisitButton";
+import MobileVisitList from "@/components/MobileVisitList";
 import { getCurrentProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -70,12 +71,12 @@ export default async function SearchPage({
         <p className="mb-4 text-sm text-text-muted">
           Maghanap ng estudyante gamit ang pangalan, student number, o i-filter ayon sa purpose, status, at iba pa.
         </p>
-        <form className="flex flex-wrap items-end gap-3">
+        <form className="grid grid-cols-1 items-end gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <input
             name="q"
             defaultValue={filters.q}
             placeholder="Hanapin: name / student no."
-            className={`${field} w-56`}
+            className={`${field} min-w-0 sm:col-span-2 xl:col-span-2`}
           />
           <select name="purpose" defaultValue={filters.purpose ?? ""} className={field}>
             <option value="">Lahat ng purpose</option>
@@ -101,14 +102,14 @@ export default async function SearchPage({
               </option>
             ))}
           </select>
-          <input name="grade" defaultValue={filters.grade} placeholder="Grade/Year" className={`${field} w-32`} />
-          <label className="text-xs text-text-muted">
-            Mula
-            <input type="date" name="from" defaultValue={filters.from} className={`${field} ml-1`} />
+          <input name="grade" defaultValue={filters.grade} placeholder="Grade/Year" className={field} />
+          <label className="block text-xs text-text-muted">
+            <span className="mb-1 block">Mula</span>
+            <input type="date" name="from" defaultValue={filters.from} className={`${field} min-w-0`} />
           </label>
-          <label className="text-xs text-text-muted">
-            Hanggang
-            <input type="date" name="to" defaultValue={filters.to} className={`${field} ml-1`} />
+          <label className="block text-xs text-text-muted">
+            <span className="mb-1 block">Hanggang</span>
+            <input type="date" name="to" defaultValue={filters.to} className={`${field} min-w-0`} />
           </label>
           <button className="rounded-xl bg-primary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-dark">
             Hanapin
@@ -147,7 +148,7 @@ export default async function SearchPage({
 
       {hasFilters && (
         <>
-          <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+          <div className="hidden overflow-x-auto rounded-2xl border border-border bg-card md:block print:block">
             <table className="w-full text-left text-sm">
               <thead>
                 <tr className="border-b border-border bg-surface text-text-muted">
@@ -225,7 +226,9 @@ export default async function SearchPage({
             </table>
           </div>
 
-          <div className="flex items-center justify-between text-sm text-text-muted">
+          <MobileVisitList visits={visits} canEdit={canEdit} emptyMessage="Walang nahanap na records." />
+
+          <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-text-muted">
             <span>
               {total} result{total === 1 ? "" : "s"} · Page {page} of {pages}
             </span>

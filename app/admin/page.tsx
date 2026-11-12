@@ -136,9 +136,9 @@ export default async function Dashboard() {
         ) : (
           <ul className="divide-y divide-border">
             {preview.map((v) => (
-              <li key={v.id} className="flex items-center justify-between py-2.5">
-                <div>
-                  <span className="font-medium text-text">{v.student_name}</span>
+              <li key={v.id} className="flex flex-wrap items-center justify-between gap-1 py-2.5">
+                <div className="min-w-0">
+                  <span className="break-words font-medium text-text">{v.student_name}</span>
                   <span className="ml-2 text-sm text-text-muted">
                     {PURPOSE_LABELS[v.purpose] ?? v.purpose}
                   </span>
@@ -160,7 +160,7 @@ export default async function Dashboard() {
           <ul className="space-y-3">
             {breakdown.map(([purpose, n]) => (
               <li key={purpose} className="flex items-center gap-3">
-                <span className="w-48 shrink-0 text-sm text-text-muted sm:w-56">
+                <span className="w-24 shrink-0 break-words text-sm text-text-muted sm:w-56">
                   {PURPOSE_LABELS[purpose] ?? purpose}
                 </span>
                 <div className="h-5 flex-1 overflow-hidden rounded-full bg-surface">

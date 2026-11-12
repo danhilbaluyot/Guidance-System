@@ -1,5 +1,6 @@
 import Link from "next/link";
 import EditVisitButton from "@/components/EditVisitButton";
+import MobileVisitList from "@/components/MobileVisitList";
 import { getCurrentProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -47,7 +48,7 @@ export default async function VisitsPage({
 
       {error && <p className="rounded-xl bg-error-light p-3 text-error">May error: {error.message}</p>}
 
-      <div className="overflow-x-auto rounded-2xl border border-border bg-card">
+      <div className="hidden overflow-x-auto rounded-2xl border border-border bg-card md:block print:block">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-border bg-surface text-text-muted">
@@ -125,7 +126,9 @@ export default async function VisitsPage({
         </table>
       </div>
 
-      <div className="flex items-center justify-between text-sm text-text-muted print:hidden">
+      <MobileVisitList visits={visits} canEdit={canEdit} emptyMessage="Wala pang visit records." />
+
+      <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-text-muted print:hidden">
         <span>
           {total} record{total === 1 ? "" : "s"} · Page {page} of {pages}
         </span>
